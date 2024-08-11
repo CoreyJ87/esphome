@@ -196,29 +196,22 @@ void FluvalBleLed::set_led_state(bool state) {
   }
 }
 
-void FluvalBleLed::set_mode(uint8_t mode) {
-  switch (mode) {
-    case 0: {  // manual
-      ESP_LOGD(TAG, "Setting mode to manual");
-      std::vector<uint8_t> value{0x68, 0x02, 0x00};
-      this->send_packet_(value);
-      break;
-    }
-    case 1: {  // auto
-      ESP_LOGD(TAG, "Setting mode to auto");
-      std::vector<uint8_t> value{0x68, 0x02, 0x01};
-      this->send_packet_(value);
-      break;
-    }
-    case 2: {  // pro
-      ESP_LOGD(TAG, "Setting mode to pro");
-      std::vector<uint8_t> value{0x68, 0x02, 0x02};
-      this->send_packet_(value);
-      break;
-    }
-    default:
-      break;
+void FluvalBleLed::set_mode(const std::string &mode) {
+  uint8_t mode_value;
+  if (mode == MODE_MANUAL) {
+    mode_value = 0x00;
+  } else if (mode == MODE_AUTO) {
+    mode_value = 0x01;
+  } else if (mode == MODE_PRO) {
+    mode_value = 0x02;
+  } else {
+    ESP_LOGE(TAG, "Invalid mode: %s", mode.c_str());
+    return;
   }
+  
+  ESP_LOGD(TAG, "Setting mode to %s", mode.c_str());
+  std::vector<uint8_t> value{0x68, 0x02, mode_value};
+  this->send_packet_(value);
 }
 
 void FluvalBleLed::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,

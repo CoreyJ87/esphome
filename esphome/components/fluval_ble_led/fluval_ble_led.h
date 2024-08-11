@@ -31,9 +31,9 @@ static const espbt::ESPBTUUID FLUVAL_CHARACTERISTIC_READ_REG =
 static const espbt::ESPBTUUID FLUVAL_CHARACTERISTIC_WRITE_REG_ID =
     espbt::ESPBTUUID::from_raw("00001005-0000-1000-8000-00805F9B34FB");  // write
 
-static const uint8_t MANUAL_MODE = 0x00;
-static const uint8_t AUTO_MODE = 0x01;
-static const uint8_t PRO_MODE = 0x02;
+static const char *const MODE_MANUAL = "Manual";
+static const char *const MODE_AUTO = "Auto";
+static const char *const MODE_PRO = "Pro";
 
 class FluvalBleLed;
 
@@ -84,7 +84,7 @@ class FluvalBleLed : public esphome::ble_client::BLEClientNode, public Component
 #endif
 
   void set_led_state(bool state);
-  void set_mode(uint8_t mode);
+  void set_mode(const std::string &mode);
 
   void register_fluval_led_client(FluvalLedClient *fluval_led_client) {
     fluval_led_client->set_parent(this);
